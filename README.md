@@ -10,6 +10,8 @@ This is useful when the timestamps of the files in your Android's SD card are wr
 
 This is also useful for the files in your Windows, too.
 
+The file 'A' is just a CSV file where the paths and its mtimes are stored. You can easily understand.
+
 Android の SDカード の タイムスタンプ がおかしくなった時に一括修正する Perlスクリプト を作った。転送元でtstamps > A、転送先でtstamps A。Windowsは cygwin 、Androidは termux あたりがいいかな。
 
 Windowsでタイムスタンプがおかしくなったときにも有効。
