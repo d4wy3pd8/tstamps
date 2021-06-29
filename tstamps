@@ -1,0 +1,48 @@
+#!/usr/bin/perl -s
+
+# (no options): output timestamps of current directory
+# -a=<time stamps file>: apply
+#   -s=N: print log 1 file in N files.(default=100)
+#   -n, -dryrun, -dry
+# -debug
+#
+# time stamps file format
+# <file name>,<atime>,<mtime>
+# ctime is not changeable in unix systems.
+
+if('' eq $s) { $s = 100; }
+$a .= $ARGV[0];
+
+#########1#########2#########3#########4#########5#########6#########7
+
+if('' eq $a) {
+  open(FIND, "find . -type f |");
+  while(<FIND>) { s/\r//g; s/\n//g; $f = $_;
+    @a = stat($f); $atime = $a[8]; $mtime = $a[9];
+    print "$f,$atime,$mtime\n";
+    if($debug) {
+      print "  ".localtime($atime)." - ".localtime($mtime)."\n";
+    }
+  }
+  close(FIND);
+  exit(0);
+}
+
+##=======1=========2=========3=========4=========5=========6=========7
+
+open(TSFILE, "<$a");
+while(<TSFILE>) { s/\r//g; s/\n//g;
+  m/^(.*),(\d+),(\d+)$/; $f = $1; $atime = $2; $mtime = $3;
+  if($debug) {
+    print STDERR "f=$f, a=$atime, m=$mtime\n";
+  }
+  if(0 == $sPrint)
+    { print STDERR "utime $atime, $mtime, $f\n"; }
+  $sPrint++; if($sPrint >= $s) { $sPrint = 0; }
+  unless($n || $dryrun || $dry) {
+    utime $atime, $mtime, $f;
+  }
+}
+close(TSFILE);
+
+#########1#########2#########3#########4#########5#########6#########7
